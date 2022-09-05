@@ -223,7 +223,9 @@ func main() {
 	// fmt.Println(greatestCommonDivisorUsingPrimeFactor(675, 465))
 	// fmt.Println(greatestCommonDivisorUsingPrimeFactor(2, 3))
 
-	// fmt.Println(greatestCommonDivisorUsingEuclidean(675, 465))
+	fmt.Println(greatestCommonDivisorUsingEuclidean(675, 0))
+	fmt.Println(greatestCommonDivisorUsingEuclidean(0, 465))
+	fmt.Println(greatestCommonDivisorUsingEuclidean(675, 465))
 
 	fmt.Println("------Program exit!------")
 }
@@ -238,29 +240,14 @@ func main() {
 		
 		Find GCD(B,R) using the Euclidean Algorithm since GCD(A,B) = GCD(B,R)
 */
-func greatestCommonDivisorUsingEuclidean(numbers... int) int {
-	if len(numbers) > 2 {
-		panic(fmt.Sprintf(chunks.Yellow, "\n\n\tThis function is only to find GCD between two numbers", chunks.Reset))	
+func greatestCommonDivisorUsingEuclidean(a,b int) int {
+	
+	for b != 0 {
+		// Write A in quotient remainder form (A = B⋅Q + R)
+		a, b = b, a % b
 	}
 
-	if numbers[0] == 0 {
-		return numbers[1]
-	}else if numbers[1] == 0 {
-		return numbers[0]
-	}
-
-	// Write A in quotient remainder form (A = B⋅Q + R)
-	if numbers[0] > numbers[1] {
-		
-		temp := numbers[0]
-		numbers[0] = numbers[1]
-		numbers[1] = temp % numbers[1]
-	}else {
-		temp := numbers[1]
-		numbers[1] = numbers[0]
-		numbers[0] = temp % numbers[0]
-	}
-	return greatestCommonDivisorUsingEuclidean(numbers...)
+	return a
 }
 
 
