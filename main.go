@@ -8,7 +8,7 @@ import (
 	"time"
 	// "strconv"
 	// "strings"
-	// "github.com/SSMalik99/algo/chunks"
+	"github.com/SSMalik99/algo/chunks"
 )
 
 
@@ -209,18 +209,200 @@ func main() {
 	// fmt.Println("------------", numberOfSum(100), "------------")
 
 	// fmt.Println("------------", letFindEffectiveDifitForSum(100), "------------")
-	fmt.Println(time.Now())
-	fmt.Println("------------", letFindEffectiveDifitForSum(18), "------------")
-	fmt.Println(time.Now())
-	fmt.Println("------------", numberOfSum(18), "------------")
-	fmt.Println(time.Now())
-	fmt.Println("------------", findNumberWithDigitSum(18), "------------")
-	fmt.Println(time.Now())
+	// fmt.Println(time.Now())
+	// fmt.Println("------------", letFindEffectiveDifitForSum(18), "------------")
+	// fmt.Println(time.Now())
+	// fmt.Println("------------", numberOfSum(18), "------------")
+	// fmt.Println(time.Now())
+	// fmt.Println("------------", findNumberWithDigitSum(18), "------------")
+	// fmt.Println(time.Now())
+	// fmt.Println(primeFactorNumber(300))
+
+	// fmt.Println(fibonacciSeries(10))
+
+	// fmt.Println(greatestCommonDivisorUsingPrimeFactor(675, 465))
+	// fmt.Println(greatestCommonDivisorUsingPrimeFactor(2, 3))
+
+	// fmt.Println(greatestCommonDivisorUsingEuclidean(675, 465))
 
 	fmt.Println("------Program exit!------")
 }
 
 
+// GCD with Euclidean formula
+/*
+	The Euclidean Algorithm for finding GCD(A,B) is as follows:
+		If A = 0 then GCD(A,B)=B, since the GCD(0,B)=B, and we can stop.  
+		If B = 0 then GCD(A,B)=A, since the GCD(A,0)=A, and we can stop.  
+		Write A in quotient remainder form (A = B⋅Q + R)
+		
+		Find GCD(B,R) using the Euclidean Algorithm since GCD(A,B) = GCD(B,R)
+*/
+func greatestCommonDivisorUsingEuclidean(numbers... int) int {
+	if len(numbers) > 2 {
+		panic(fmt.Sprintf(chunks.Yellow, "\n\n\tThis function is only to find GCD between two numbers", chunks.Reset))	
+	}
+
+	if numbers[0] == 0 {
+		return numbers[1]
+	}else if numbers[1] == 0 {
+		return numbers[0]
+	}
+
+	// Write A in quotient remainder form (A = B⋅Q + R)
+	if numbers[0] > numbers[1] {
+		
+		temp := numbers[0]
+		numbers[0] = numbers[1]
+		numbers[1] = temp % numbers[1]
+	}else {
+		temp := numbers[1]
+		numbers[1] = numbers[0]
+		numbers[0] = temp % numbers[0]
+	}
+	return greatestCommonDivisorUsingEuclidean(numbers...)
+}
+
+
+// Greatest common divisor GCD with prime factors
+func greatestCommonDivisorUsingPrimeFactor(numbers... int) int {
+	if len(numbers) > 2 {
+		panic(fmt.Sprintf(chunks.Yellow, "\n\n\tThis function is only to find GCD between two numbers", chunks.Reset))
+	}
+	number, divisiblity := checkNumeberDivisible(numbers[0], numbers[1])
+	if divisiblity {
+		return number
+	}
+	primeFactors1 := primeFactorNumber(numbers[0])
+	primeFactors2 := primeFactorNumber(numbers[1])
+	overAllFactor := []int{}
+	compareAndGenerateGCD := func (factors1, factors2 []int) int {
+		for _, factor := range factors1 {
+			if chunks.NumberInList(factors2, factor) {
+				factors2 = removeNumberFromSlice(factors2, factor, false)
+				overAllFactor = append(overAllFactor, factor)
+			}
+		}
+		total := 1
+		for _, fac := range overAllFactor {
+			total *= fac	
+		}
+		return total
+	}
+
+	if len(primeFactors1) > len(primeFactors2) {
+		return compareAndGenerateGCD(primeFactors1, primeFactors2)	
+	}
+
+	return compareAndGenerateGCD(primeFactors2, primeFactors1)
+	
+}
+
+func checkNumeberDivisible(num1, num2 int) (int, bool) {
+	// check for the zero numbers
+	if num1 == 0 {
+		return num2, true
+	}
+	if num2 == 0 {
+		return num1, true
+	}
+
+	if num1 > num2 {
+		if num1 % num2 == 0 {
+			return num2, true
+		}
+	}else {
+		if num2 % num1 == 0 {
+			return num1, true
+		}
+	}
+
+	return 0, false
+}
+
+
+func removeNumberFromSlice(slice []int, number int, deleteAll bool) []int {
+	var newSlice []int
+
+	for index, num := range slice {
+
+		if deleteAll {
+			if num != number {
+				newSlice = append(newSlice, num)
+			}
+		}else{
+
+			if num == number {
+				newSlice = append(newSlice, slice[index+1:]...)
+				newSlice = append(newSlice, slice[:index]...)
+				break;
+			}
+		}
+	}
+	return newSlice
+}
+
+
+func fibonacciSeries(numberOfTerms int) *[]int {
+	fibonaci := []int{0, 1}
+	for i := len(fibonaci); i < numberOfTerms; i++ {
+		fibonaci = append(fibonaci, fibonaci[i-1] + fibonaci[i-2])
+	}
+	return &fibonaci // instead of sharing whole the slice share the address
+}
+
+func primeFactorNumber(num int) []int {
+	var factors = []int{} // factors' stack
+	nextPrime := nextPrimeNumber(1) //prime number next to 1
+	// for loop to add prime factor to the factors stack
+	for {
+		if num < 2 {
+			break // break the loop if number is no more activated
+		}
+		// for loop to find next prime number
+		for {
+			if num % nextPrime == 0 {				
+				break // break the loop if next Prime is available
+			}
+			nextPrime = nextPrimeNumber(nextPrime)
+		}
+		// add prime numbr to the stack
+		if num % nextPrime == 0 {
+			factors = append(factors, nextPrime)
+		}
+		num = num / nextPrime // make number equal to the quotient
+	}
+	return factors
+}
+// find next prime number after a given number
+func nextPrimeNumber(number int) int {
+	if number == 0 || number == 1 {
+		return 2 // return very first prime
+	}
+	number += 1 // increase the number to find next number
+	for {
+		if isPrime(number) {
+			break // break loop if number is prime 
+		}
+		number += 1 // increase number again
+	}
+	return number // return the number
+}
+
+// check number is prime or not
+func isPrime(number int) bool {
+	if number == 2 {
+		return true // return first prime
+	}
+	// loop to divide the number
+	for i := 2; i < number; i++ {
+		if number % i == 0 {
+			return false
+		}
+	}
+
+	return true
+}
 
 func sumOfDigits(number int) int {
 	
