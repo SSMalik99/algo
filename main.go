@@ -6,9 +6,11 @@ import (
 	"math"
 	"strings"
 	"time"
+
 	// "strconv"
 	// "strings"
 	"github.com/SSMalik99/algo/chunks"
+	"github.com/SSMalik99/algo/sorting"
 )
 
 
@@ -223,9 +225,14 @@ func main() {
 	// fmt.Println(greatestCommonDivisorUsingPrimeFactor(675, 465))
 	// fmt.Println(greatestCommonDivisorUsingPrimeFactor(2, 3))
 
-	fmt.Println(greatestCommonDivisorUsingEuclidean(675, 0))
-	fmt.Println(greatestCommonDivisorUsingEuclidean(0, 465))
-	fmt.Println(greatestCommonDivisorUsingEuclidean(675, 465))
+	// fmt.Println(greatestCommonDivisorUsingEuclidean(675, 0))
+	// fmt.Println(greatestCommonDivisorUsingEuclidean(0, 465))
+	// fmt.Println(greatestCommonDivisorUsingEuclidean(675, 465))
+
+	// sorting.ShowDocumentation()
+
+	list := []int{12, 3445, 2, 3,4, 66, 5, 7, 8, 9, 111, 222,  110, 102}
+	sorting.BubbleSort(list)
 
 	fmt.Println("------Program exit!------")
 }
